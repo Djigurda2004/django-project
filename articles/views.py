@@ -12,12 +12,10 @@ def articles(request):
     articles = Article.objects.all()
     if query:
         articles = articles.filter(Q(title__icontains=query) | Q(author__username__icontains=query))
-    articles = articles.order_by("-created_at")
     paginator = Paginator(articles, 5)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     return render(request, "articles/articles.html", {"page_obj": page_obj,"query": query})
-
 
 class ArticleDetailView(DetailView):
     model = Article

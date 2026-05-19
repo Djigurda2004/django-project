@@ -8,7 +8,7 @@
 }
 
 .search-field{
-    margin: 50px auto;
+    margin: 25px;
     width: 100%;
     max-width: 450px;
 }
@@ -26,11 +26,13 @@
 }
 
 .article-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;  
     width: 450px;
     height: 200px;
-    margin: 50px auto;
-    padding: 20px 20px;
-    align-items:start;
+    margin: 25px;
+    padding:20px;
     background: white;
     border:3px solid black;
     border-radius: 8px;
@@ -38,24 +40,42 @@
 }
 
 .article-card h3,.article-card p {
-    margin-top: 0;
+    margin: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .article-card i{
-    margin-left: 5px;
+    font-style: normal;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
 }
 
 .btn-more{
     background-color:#b8b8b8 !important;
     border-color:#b8b8b8 !important;
+    align-self: flex-start;
 }
 
+.article-stats {
+    display: flex;
+    gap: 15px;
+}
+
+.article-list {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
 .article-list h1{
+    margin: 0;
     color:white;
-    margin-top: 20px;
 }
 
 /* article create form */
@@ -85,16 +105,16 @@
 
 .article-details-content {
     color: white;
-    margin-top: 50px;
+    gap: 25px;
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
 }
 
-.article-details-content p {
+.article-details-content p, .article-details-content h3{
+    margin: 0;
     max-width: 800px;
-    margin-top: 20px;
     overflow-wrap: break-word;
     word-break: break-word;
 }
@@ -108,6 +128,5 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    margin-top: 20px;
 }
 

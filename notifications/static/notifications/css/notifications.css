@@ -1,0 +1,44 @@
+.notifications-list {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.notifications-list h1{
+    color: white;
+}
+
+.notification-card{
+    position: relative;
+    width: 350px;
+    height: 120px;
+    margin-top:15px;
+    padding: 10px;
+    background: white;
+    border:3px solid black;
+    border-radius: 8px;
+    color:black;
+}
+
+.notification-card p{
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-footer{
+    position: absolute;
+    bottom: 10px;
+    width: calc(100% - 20px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.icon-btn{
+    color:black;
+    background: none;
+    border: none; 
+    padding: 0;
+    cursor: pointer;
+}

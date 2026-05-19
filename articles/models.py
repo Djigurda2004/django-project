@@ -18,6 +18,6 @@ class Article(models.Model):
         return f'/articles/{self.id}'
     
     class Meta:
-        
         verbose_name = 'Article'
         verbose_name_plural = 'Articles'
+        ordering = ['-created_at']

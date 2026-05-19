@@ -14,6 +14,3 @@ class Comment(MPTTModel):
     
     class MPTTMeta():
         order_insertion_by = ['created_at']
-
-    def __str__(self):
-        return f"{self.author}"

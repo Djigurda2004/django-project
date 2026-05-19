@@ -6,10 +6,12 @@
     justify-content: center;
     flex-direction: column;
     width: 100%;
+    gap: 15px;
+    margin-bottom: 15px;
 }
 
 .profile-info p,.profile-info h1,.profile-info a{
-    margin-top: 20px;
+    margin: 0;
     color: white;
 }
 

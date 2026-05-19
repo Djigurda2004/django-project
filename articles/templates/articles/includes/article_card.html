@@ -2,8 +2,12 @@
     {% include "users/includes/user_badge.html" with account=article.author%}
     <h3>{{article.title}}</h3>
     <p>{{article.created_at|timesince}} ago</p>
-    <a href="{%url 'articles:detail' article.id%}" class="btn btn-warning btn-more" title="Detailed view">More...</a>
-    <i class="fa-solid fa-eye"> {{article.views}}</i>
-    <i class="fa-solid fa-heart"> {{article.likes.count}}</i>
-    <i class="fa-solid fa-comment-dots"> {{article.comments.count}}</i>
+    <div class="card-footer">   
+        <div class="article-stats">
+            <i class="fa-solid fa-eye"> {{article.views}}</i>
+            <i class="fa-solid fa-heart"> {{article.likes.count}}</i>
+            <i class="fa-solid fa-comment-dots"> {{article.comments.count}}</i>      
+        </div>
+        <a href="{%url 'articles:detail' article.id%}" class="btn btn-warning btn-more" title="Detailed view">More...</a>
+    </div>
 </div>
