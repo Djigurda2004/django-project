@@ -12,6 +12,8 @@ services:
 
   redis:
     image: redis:8.6-alpine
+    ports:
+      - "6379:6379"
 
   web:
     build: .
@@ -29,7 +31,7 @@ services:
 
   worker:
     build: .
-    command: celery -A dj worker --loglevel=info
+    command: celery -A project worker --loglevel=info
     volumes:
       - .:/app
     depends_on:

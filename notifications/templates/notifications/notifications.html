@@ -1,12 +1,13 @@
 {%extends 'main/sidebar.html'%}
-{% load static %}
+{%load static%}
 {%block extra_css%}<link rel="stylesheet" href="{% static 'notifications/css/notifications.css'%}">{%endblock%}
+{%load notifications_tags%}
 {%block content%}
 <div class="notifications-list">
     <h1>Your notifications</h1>
         {% for notification in notifications %}
             <div class="notification-card">
-                <p>{{notification.text}}</p>
+                <p>{{notification|render_notification_text}}</p>
                 <div class="card-footer">
                     <span>{{notification.created_at|timesince}} ago</span>
                     <form action="{%url 'notifications:delete' notification.id%}" method="post">

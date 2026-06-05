@@ -46,7 +46,7 @@
                     <a href="{%url 'articles:liked'%}"><i class="fa-solid fa-heart"></i> Liked</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{%url 'notifications:list'%}"><i class="fa-solid fa-bell"></i> Notifications</a>
+                    <a href="{%url 'notifications:list'%}"><i class="fa-solid fa-bell"><sup>{{unread_notifications}}</sup></i> Notifications</a>
                 </li>
                 <li class="nav-item">
                     <a href="{% url 'articles:create' %}" class="btn btn-info btn-create-article" title="Create article"><i class="fas fa-plus-circle"></i> Create</a>

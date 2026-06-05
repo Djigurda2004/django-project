@@ -1,49 +1,60 @@
-from django.db.models.signals import post_save, m2m_changed
+from django.db.models.signals import post_save, m2m_changed , post_delete
 from django.dispatch import receiver
-from django.shortcuts import get_object_or_404
 from .models import Notification
 from articles.models import Article
 from comments.models import Comment
 from users.models import Profile
 from django.contrib.auth.models import User
-from .tasks import all_followers_notification_task
+from .tasks import send_notification_to_followers
+from django.contrib.contenttypes.models import ContentType
+from .utils import increment_unread_notifications,decrement_unread_notifications
 
 @receiver(post_save,sender=Article)
-def notify_on_article_create(sender,instance,created,**kwargs):
+def handle_article_post_save(sender,instance,created,**kwargs):
     if created:
-        Notification.objects.create(receiver=instance.author,text="Your article has been successfully published.")
-        all_followers_notification_task.delay(instance.author.id)
+        Notification.objects.create(receiver=instance.author,type="ARTICLE_PUBLISHED_FOR_AUTHOR",content_type=ContentType.objects.get_for_model(Article),object_id=instance.id)
+        send_notification_to_followers.delay(instance.author.id,instance.id)
 
 @receiver(m2m_changed,sender=Article.likes.through)
-def notify_on_article_like(sender,instance,action,pk_set,**kwargs):
+def handle_article_like_m2m_changed(sender,instance,action,pk_set,**kwargs):
     if action == 'post_add':
         notifications = []
         for pk in pk_set:
-            user = User.objects.get(id=pk)
-            notifications.append(Notification(receiver=instance.author,text=f"User {user.username} liked your article."))
+            notifications.append(Notification(receiver=instance.author,type="ARTICLE_LIKED",content_type=ContentType.objects.get_for_model(User),object_id=pk))
         Notification.objects.bulk_create(notifications,batch_size=1000)
+        increment_unread_notifications(instance.author.id)
 
 @receiver(post_save,sender=Comment)
-def notify_on_comment_create(sender,instance,created,**kwargs):
+def handle_comment_post_save(sender,instance,created,**kwargs):
     if created:
-        Notification.objects.create(receiver=instance.article.author,text=f"User {instance.author} commented on your article.")
+        Notification.objects.create(receiver=instance.article.author,type="COMMENT_CREATED",content_type=ContentType.objects.get_for_model(User),object_id=instance.author.id)
         if instance.is_child_node():
-            Notification.objects.create(receiver=instance.parent.author,text=f"User {instance.author} replied to your comment.")
+            Notification.objects.create(receiver=instance.parent.author,type="COMMENT_CREATED_FOR_PARENT",content_type=ContentType.objects.get_for_model(User),object_id=instance.author.id)
 
 @receiver(m2m_changed,sender=Comment.likes.through)
-def notify_on_comment_like(sender,instance,action,pk_set,**kwargs):
+def handle_comment_like_m2m_changed(sender,instance,action,pk_set,**kwargs):
     if action == 'post_add':
         notifications = []
         for pk in pk_set:
-            user = User.objects.get(id=pk)
-            notifications.append(Notification(receiver=instance.author,text=f"User {user.username} liked your comment."))
+            notifications.append(Notification(receiver=instance.author,type="COMMENT_LIKED",content_type=ContentType.objects.get_for_model(User),object_id=pk))
         Notification.objects.bulk_create(notifications,batch_size=1000)
+        increment_unread_notifications(instance.author.id)
 
 @receiver(m2m_changed,sender=Profile.followers.through)
-def notify_on_profile_follow(sender,instance,action,pk_set,**kwargs):
+def handle_profile_follow_m2m_changed(sender,instance,action,pk_set,**kwargs):
     if action == 'post_add':
         notifications = []
         for pk in pk_set:
-            follower = User.objects.get(id=pk)
-            notifications.append(Notification(receiver=instance.user,text=f"User {follower.username} has followed you"))
+            notifications.append(Notification(receiver=instance.user,type="PROFILE_FOLLOW",content_type=ContentType.objects.get_for_model(User),object_id=pk))     
         Notification.objects.bulk_create(notifications,batch_size=1000)
+        increment_unread_notifications(instance.user.id)
+
+@receiver(post_save,sender=Notification)
+def handle_notification_post_save(sender,instance,created,**kwargs):
+    if created and instance.is_read == False:
+        increment_unread_notifications(instance.receiver.id)
+
+@receiver(post_delete,sender=Notification)
+def handle_notification_post_delete(sender,instance,**kwargs):
+    if instance.is_read == False:
+        decrement_unread_notifications(instance.receiver.id)

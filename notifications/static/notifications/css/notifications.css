@@ -20,10 +20,12 @@
     color:black;
 }
 
-.notification-card p{
+.notification-card p,a{
     margin: 0;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-decoration: none;
+    display: inline;
 }
 
 .card-footer{

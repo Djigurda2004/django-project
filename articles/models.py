@@ -9,7 +9,7 @@ class Article(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User,on_delete=models.CASCADE,related_name="articles",)
     likes = models.ManyToManyField(User, related_name="liked_articles", blank=True)
-    views = models.IntegerField(default=0)
+    views = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f'Article: {self.title}'
