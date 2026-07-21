@@ -1,4 +1,4 @@
-{% extends 'main/sidebar.html' %}
+{% extends 'base/sidebar.html' %}
 {% load static%}
 {%block title%}Articles{%endblock%}
 {% block extra_css %}
@@ -17,28 +17,6 @@
             {%include 'articles/includes/article_card.html'%}
         {%endfor%}
     </div>
-    <ul class="pagination">
-        {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?q={{ query }}&page={{ page_obj.previous_page_number }}">Prev</a>
-            </li>
-        {% endif %}
-        {% for num in page_obj.paginator.page_range %}
-            {% if num == page_obj.number %}
-                <li class="page-item active">
-                    <span class="page-link">{{ num }}</span>
-                </li>
-            {% else %}
-                <li class="page-item">
-                    <a class="page-link" href="?q={{ query }}&page={{ num }}">{{ num }}</a>
-                </li>
-            {% endif %}
-        {% endfor %}
-        {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?q={{ query }}&page={{ page_obj.next_page_number }}">Next</a>
-            </li>
-        {% endif %}
-    </ul>
+    {% include "articles/includes/pagination.html"%}
 </div>
 {% endblock %}

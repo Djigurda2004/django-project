@@ -1,8 +1,9 @@
+{%load common_tags%}
 <div class="comment-node" id="comment-{{ node.id }}">
     <div class="comment-content">
         <div class="comment-meta">
-            {% include "users/includes/user_badge.html" with account=node.author%}
-            <span>{{ node.created_at|timesince }} ago</span>
+            {% include "users/includes/user_badge.html" with user=node.author%}
+            <span>{{ node|render_creation_time }}</span>
         </div>
         <div class="comment-text mb-2">
             <p>{{ node.text|linebreaks }}</p>

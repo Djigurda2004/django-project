@@ -1,4 +1,4 @@
-from core.redis_client import redis_client
+from common.redis_client import redis_client
 from .redis_keys import get_user_unread_notifications_key
 
 def unread_notifications(request):

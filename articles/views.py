@@ -4,18 +4,14 @@ from .forms import ArticleForm
 from django.views.generic import DetailView,UpdateView,DeleteView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.core.paginator import Paginator
-from django.db.models import Q
+from .utils import pagination
+from .redis_keys import get_article_views_key
+from common.redis_client import redis_client
 
 def articles(request):
-    query = request.GET.get("q", "")
-    articles = Article.objects.all()
-    if query:
-        articles = articles.filter(Q(title__icontains=query) | Q(author__username__icontains=query))
-    paginator = Paginator(articles, 5)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-    return render(request, "articles/articles.html", {"page_obj": page_obj,"query": query})
+    articles = Article.objects.all().order_by("-created_at")
+    data = pagination(request,articles,5)
+    return render(request, "articles/articles.html", data)
 
 class ArticleDetailView(DetailView):
     model = Article
@@ -23,12 +19,12 @@ class ArticleDetailView(DetailView):
     context_object_name = 'article'
     def get_object(self,queryset=None):
         article = super().get_object(queryset)
-        article.views += 1
-        article.save(update_fields=["views"])
+        redis_client.incr(get_article_views_key(article.id))
         return article
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
         context['comments'] = self.object.comments.filter(parent=None).order_by('-created_at')
+        context['redis_views'] = redis_client.get(get_article_views_key(self.object.id))
         return context
 
 
@@ -60,6 +56,7 @@ def create_article(request):
             article = form.save(commit=False)
             article.author = request.user
             article.save()
+            redis_client.set(get_article_views_key(article.id),0)
             return redirect('articles:articles')
         else:
             error = 'The form is incorrect'
@@ -81,5 +78,8 @@ def like_article(request,pk):
 
 @login_required
 def liked_articles(request):
-    articles = request.user.liked_articles.all()
-    return render(request,'articles/liked_articles.html',{'articles':articles})
+    articles = request.user.liked_articles.all().order_by("-created_at")
+    articles_count = articles.count()
+    data = pagination(request,articles,5)
+    data["articles_count"] = articles_count
+    return render(request,'articles/liked_articles.html',data)

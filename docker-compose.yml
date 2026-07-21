@@ -14,6 +14,8 @@ services:
     image: redis:8.6-alpine
     ports:
       - "6379:6379"
+    volumes:
+      - "redis_data:/data"
 
   web:
     build: .
@@ -28,7 +30,6 @@ services:
     env_file:
       - .env
 
-
   worker:
     build: .
     command: celery -A project worker --loglevel=info
@@ -39,6 +40,19 @@ services:
       - db
     env_file:
       - .env
+  
+  celery_beat:
+    build: .
+    command: celery -A project beat --loglevel=info --pidfile=/tmp/celerybeat.pid --schedule=/var/lib/celerybeat/celerybeat-schedule
+    volumes:
+      - .:/app
+      - celery_beat_data:/var/lib/celerybeat
+    depends_on:
+      - worker
+      - redis
+
 
 volumes:
   postgres_data:
+  redis_data:
+  celery_beat_data:

@@ -1,11 +1,13 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+from django.urls.base import reverse
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+class User(AbstractUser):
+    email = models.EmailField(max_length=255,unique=True,blank=False)
     bio = models.TextField(blank=True)
-    avatar = models.ImageField(upload_to="avatars/", blank=True)
-    followers = models.ManyToManyField(User,symmetrical=False,related_name="following",blank=True)
+    avatar = models.ImageField(upload_to="avatars/",blank=True)
+    followers = models.ManyToManyField("self",related_name="following",symmetrical=False,blank=True)
 
-    def __str__(self):
-        return self.user.username
+    
+    def get_absolute_url(self):
+        return reverse('users:profile',username=self.username)

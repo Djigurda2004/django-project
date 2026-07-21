@@ -1,10 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
+from users.models import User
 
 class Article(models.Model):
-    title = models.CharField('Name',max_length=50)
-    announcement = models.CharField('Announcement',max_length=250)
-    full_text= models.TextField('Full text')
+    title = models.CharField(max_length=50)
+    announcement = models.CharField(max_length=250)
+    full_text= models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User,on_delete=models.CASCADE,related_name="articles",)
@@ -14,9 +14,12 @@ class Article(models.Model):
     def __str__(self):
         return f'Article: {self.title}'
     
-    def get_absolute_url (self):
+    def get_absolute_url(self):
         return f'/articles/{self.id}'
     
+    def likes_count(self):
+        return self.likes.count()
+
     class Meta:
         verbose_name = 'Article'
         verbose_name_plural = 'Articles'

@@ -1,0 +1,25 @@
+{% extends 'base/sidebar.html' %}
+{%block title%}About us{%endblock%}
+{% block content %}
+<div class="about-page-wrapper">
+    <h1>About us</h1>
+    <p class="project-brief-info">{{brief_info}}</p>
+    <h3>My contacts</h3>
+    <ul class="contacts-list">
+        <li><iframe src="https://ghbtns.com/github-btn.html?user=Djigurda2004&type=follow&count=true&size=large" frameborder="0" scrolling="0" width="230" height="30" title="GitHub"></iframe></li>
+        <li><iframe src="https://ghbtns.com/github-btn.html?user=Djigurda2004&repo=django-project&type=star&count=true&size=large" frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe></li>
+    </ul>
+    <h3>Project stack</h3>
+    <ul class="stack-list">
+        {%for icon_path in stack_icons%}
+            <li>{%include icon_path%}</li>
+        {%endfor%}
+    </ul>
+    <h3>Main features</h3>
+    <ul class="features-list">
+        {%for feature in features_list%}
+            <li><p>{{feature}}</p></li>
+        {%endfor%}
+    </ul>
+</div>
+{% endblock %}

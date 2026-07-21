@@ -37,10 +37,13 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'users',
     'articles',
-    'main',
+    'base',
     'comments',
+    'common',
     'mptt',
     'notifications',
+    'rest_framework',
+    'rest_framework_simplejwt',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -93,6 +96,7 @@ DATABASES = {
         'PASSWORD': os.getenv('DB_PASSWORD'),
     }
 }
+
 #later
 """
 CACHES = {
@@ -147,8 +151,15 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+AUTHENTICATION_BACKENDS = [
+    'users.backends.EmailAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+AUTH_USER_MODEL = 'users.User'
+
 LOGIN_URL = "users:login"
-LOGIN_REDIRECT_URL = "home"
+LOGIN_REDIRECT_URL = "base:main"
 LOGOUT_REDIRECT_URL = "users:login"
 
 MEDIA_URL = "/media/"
@@ -167,3 +178,18 @@ REDIS_URL = os.environ.get("REDIS_URL","redis://redis:6379/0")
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 """
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES':[
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer'
+    ],
+    'DEFAULT_PERMISSION_CLASSES':[
+        'rest_framework.permissions.IsAuthenticated'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
+    ],
+}

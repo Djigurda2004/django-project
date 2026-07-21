@@ -1,12 +1,12 @@
-{%extends 'main/sidebar.html'%}
+{%extends 'base/sidebar.html'%}
 {%block content%}
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <div class="following-list" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
         <h1>Your following ({{following.count}})</h1>
-        {%for follow_profile in following%}
+        {%for user in following%}
             <div class="follow-card">
-                {% include "users/includes/user_badge.html" with account=follow_profile.user%}
-                {% include "users/follow_area.html" with profile=follow_profile%}
+                {% include "users/includes/user_badge.html" with user=user%}
+                {% include "users/follow_area.html" with target_user=user%}
             </div>
         {%endfor%}
     </div>

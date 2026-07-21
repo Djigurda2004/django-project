@@ -1,0 +1,17 @@
+{% extends 'base/sidebar.html' %}
+{%block title%}Main page{%endblock%}
+{%load static%}
+{%block extra_css%}<link rel="stylesheet" href="{% static 'articles/css/articles.css' %}">{%endblock%}
+{% block content %}
+<div class="main-page-wrapper">
+    <div class="articles-page-wrapper">
+        <div class="articles-list">
+            <h1>Most popular articles</h1>
+            {%for article in articles%}
+                {%include 'articles/includes/article_card.html'%}
+            {%empty%}
+            {%endfor%}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,10 +1,11 @@
+{%load common_tags%}
 <div class="article-card">
-    {% include "users/includes/user_badge.html" with account=article.author%}
+    {% include "users/includes/user_badge.html" with user=article.author%}
     <h3>{{article.title}}</h3>
-    <p>{{article.created_at|timesince}} ago</p>
+    <p>{{article|render_creation_time}}</p>
     <div class="card-footer">   
         <div class="article-stats">
-            <i class="fa-solid fa-eye"> {{article.views}}</i>
+            <i class="fa-solid fa-eye"> {{article.redis_views}}</i>
             <i class="fa-solid fa-heart"> {{article.likes.count}}</i>
             <i class="fa-solid fa-comment-dots"> {{article.comments.count}}</i>      
         </div>

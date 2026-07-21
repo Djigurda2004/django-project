@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect, get_object_or_404
 from django.http.response import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from notifications.models import Notification
-from core.redis_client import redis_client 
+from common.redis_client import redis_client 
 from .redis_keys import get_user_unread_notifications_key
 
 @login_required

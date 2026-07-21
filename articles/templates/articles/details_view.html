@@ -1,6 +1,7 @@
-{% extends 'main/sidebar.html' %}
+{% extends 'base/sidebar.html' %}
 {% load mptt_tags %}
 {% load static%}
+{% load common_tags%}
 {% block title %}{{article.title}}{% endblock %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'comments/css/comments.css' %}">
@@ -12,10 +13,10 @@
     <h1>{{article.title}}</h1>
     <div class="author">
         <span>Author:</span>
-        {% include "users/includes/user_badge.html" with account=article.author%}
+        {% include "users/includes/user_badge.html" with user=article.author%}
     </div>
-    <p>Published {{article.created_at|timesince}} ago</p>
-    <p>Views {{article.views}}</p>
+    <p>{{article|render_creation_time}}</p>
+    <p>Views {{redis_views}}</p>
     <h3>Announcement</h3>
     <p>{{article.announcement}}</p>
     <h3>Content</h3>

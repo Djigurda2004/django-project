@@ -1,4 +1,4 @@
-{% extends 'main/sidebar.html' %}
+{% extends 'base/sidebar.html' %}
 {% load static%}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'articles/css/articles.css' %}">
@@ -8,30 +8,37 @@
 <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 <div class="profile-page-wrapper">
     <div class="profile-info" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-        {% if profile.avatar %}
-            <img class="avatar" src="{{ profile.avatar.url }}">
+        {% if user.avatar %}
+            <img class="avatar" src="{{ user.avatar.url }}">
         {% else %}
             <div class="empty-avatar">
-                <span>{{ profile.user.username|make_list|first|upper }}</span>
+                <span>{{ user.username|make_list|first|upper }}</span>
             </div>
         {% endif %}
-        <h1>{{ profile.user.username }}</h1>
-        {% if profile.bio %}
-            <p>{{ profile.bio }}</p>
+        <h1>{{ user.username }}</h1>
+        {% if user.bio %}
+            <p>{{ user.bio }}</p>
         {% endif %}
-        <p>{{profile.followers.count}} Followers</p>
-        {%if request.user != profile.user and request.user.is_authenticated%}
-            {% include "users/follow_area.html" with profile=profile%}
+        <p>{{user.followers.count}} Followers</p>
+        {%if request.user != user and request.user.is_authenticated%}
+            {% include "users/follow_area.html" with target_user=user%}
         {%endif%}
-        {% if profile.user == request.user %}
+        {% if user == request.user %}
             <a href="{%url 'users:profile_edit'%}"><i class="fa-solid fa-pen"></i> edit profile</a>
+            <form action="{%url 'users:profile_delete'%}" method="post">
+                {% csrf_token %}
+                <button class="icon-btn"><i class="fa-solid fa-trash"></i> delete profile</button>
+            </form>
         {% endif %}
     </div>
-    <div class="article-list">
-        <h1 class="text-center">User articles ({{articles.count}})</h1>
-        {% for article in articles %}
-            {%include 'articles/includes/article_card.html'%}
-        {% endfor %}
+    <div class="articles-page-wrapper">
+        <div class="article-list">
+            <h1 class="text-center">User articles ({{articles_count}})</h1>
+            {% for article in page_obj %}
+                {%include 'articles/includes/article_card.html'%}
+            {% endfor %}
+        </div>
+        {% include "articles/includes/pagination.html"%}
     </div>
 </div>
 {%endblock%}

@@ -44,6 +44,12 @@
     color: #2c2c2c;
 }
 
+.icon-btn {
+    background: none;
+    border: none; padding: 0;
+    color: white;
+}
+
 /* user badge styles */
 .user-badge {
     display: inline-flex;

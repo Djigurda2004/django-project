@@ -1,15 +1,15 @@
-<span id="follow-area-{{ profile.user.username }}">
-    {% if request.user in profile.followers.all %}
+<span id="follow-area-{{ target_user.username }}">
+    {% if request.user in target_user.followers.all %}
         <button class="btn btn-danger btn-follow"
-                hx-post="{% url 'users:follow' profile.user.username %}" 
-                hx-target="#follow-area-{{ profile.user.username }}" 
+                hx-post="{% url 'users:follow' target_user.username %}" 
+                hx-target="#follow-area-{{ target_user.username }}" 
                 hx-swap="outerHTML">
             Unfollow
         </button>
     {% else %}
         <button class="btn btn-success btn-follow"
-                hx-post="{% url 'users:follow' profile.user.username %}" 
-                hx-target="#follow-area-{{ profile.user.username }}" 
+                hx-post="{% url 'users:follow' target_user.username %}" 
+                hx-target="#follow-area-{{ target_user.username }}" 
                 hx-swap="outerHTML">
             Follow
         </button>

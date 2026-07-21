@@ -29,15 +29,15 @@ def render_notification_text(notification):
     elif notification.type == "COMMENT_LIKED":
         user = notification.content_object
         notification_text = format_html("User {} liked your comment.",render_user_badge(user))
-    elif notification.type == "PROFILE_FOLLOW":
+    elif notification.type == "USER_FOLLOW":
         user = notification.content_object
         notification_text = format_html("User {} has followed you",render_user_badge(user))
     return notification_text
 
-@register.inclusion_tag('users/uncludes/user_badge.html')
+@register.inclusion_tag('users/includes/user_badge.html')
 def render_user_badge(user):
     if user:
-        return render_to_string("users/includes/user_badge.html",{"account":user})
+        return render_to_string("users/includes/user_badge.html",{"user":user})
     return "[Deleted User]"
 
 def render_article_link(article):
